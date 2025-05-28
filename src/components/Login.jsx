@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, AlertCircle, CheckCircle2 } from 'lucide-react';
+import authService from '../services/authService';
 
-const Login = () => {  // Cambié LoginPage por Login para que coincida con la importación en App.jsx
+const Login = ({ onLogin }) => {  // Añadida prop onLogin
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const Login = () => {  // Cambié LoginPage por Login para que coincida con la i
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [backendError, setBackendError] = useState(null); // Añadido estado para errores del backend
 
   // Validación de email en tiempo real
   const validateEmail = (email) => {
@@ -101,19 +103,40 @@ const Login = () => {  // Cambié LoginPage por Login para que coincida con la i
     if (!validateForm()) return;
 
     setIsLoading(true);
+    setBackendError(null);
 
     try {
-      // Simulación de llamada a API
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Aquí iría la lógica real de autenticación
-      console.log(isLogin ? 'Login:' : 'Registro:', formData);
-      
-      // Simular éxito
-      alert(isLogin ? '¡Login exitoso!' : '¡Registro exitoso!');
-      
+      if (isLogin) {
+        // Proceso de login
+        const response = await authService.login(formData.email, formData.password);
+        console.log('Login exitoso:', response);
+        
+        // IMPORTANTE: Asegúrate de que esta línea se ejecute
+        if (typeof onLogin === 'function') {
+          console.log("Llamando a onLogin para redireccionar...");
+          onLogin(); // Esto debe ejecutarse después del login exitoso
+        } else {
+          console.error("onLogin no es una función o no está definida");
+        }
+      } else {
+        // Código de registro...
+        const response = await authService.register(
+          formData.name,
+          formData.email,
+          formData.password
+        );
+        console.log('Registro exitoso:', response);
+        setIsLogin(true); // Cambiar a la pantalla de login
+        setFormData({
+          ...formData,
+          confirmPassword: '',
+          name: ''
+        });
+        alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
+      }
     } catch (error) {
       console.error('Error:', error);
+      setBackendError(error.message || 'Error de autenticación');
     } finally {
       setIsLoading(false);
     }
@@ -130,6 +153,7 @@ const Login = () => {  // Cambié LoginPage por Login para que coincida con la i
     });
     setErrors({});
     setPasswordStrength(0);
+    setBackendError(null);
   };
 
   // Componente para mostrar fortaleza de contraseña
@@ -278,6 +302,22 @@ const Login = () => {  // Cambié LoginPage por Login para que coincida con la i
 
         {/* Form */}
         <div style={cardStyle}>
+          {backendError && (
+            <div style={{ 
+              padding: '12px', 
+              backgroundColor: '#fee2e2', 
+              borderRadius: '8px', 
+              color: '#b91c1c',
+              marginBottom: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <AlertCircle style={{ width: '20px', height: '20px' }} />
+              {backendError}
+            </div>
+          )}
+          
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Nombre (solo en registro) */}
             {!isLogin && (
@@ -496,4 +536,4 @@ const Login = () => {  // Cambié LoginPage por Login para que coincida con la i
   );
 };
 
-export default Login; // Cambié la exportación para que coincida con la importación
+export default Login;
