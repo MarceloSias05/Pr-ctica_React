@@ -1,6 +1,6 @@
 import React from 'react'
 
-const NavBar = ({ navigateTo, currentPage }) => {
+const NavBar = ({ navigateTo, currentPage, onLogout }) => {
   return (
     <nav style={navStyle}>
       <div style={logoStyle}>Práctica con React</div>
@@ -32,6 +32,12 @@ const NavBar = ({ navigateTo, currentPage }) => {
         >
           Contacto
         </li>
+        <li 
+          onClick={onLogout} 
+          style={logoutButtonStyle}
+        >
+          Cerrar Sesión
+        </li>
       </ul>
     </nav>
   )
@@ -57,7 +63,8 @@ const navListStyle = {
   display: 'flex',
   listStyle: 'none',
   gap: '2rem',
-  margin: 0
+  margin: 0,
+  alignItems: 'center'
 }
 
 const navItemStyle = {
@@ -70,6 +77,18 @@ const navItemStyle = {
 const activeStyle = {
   backgroundColor: 'rgba(255, 255, 255, 0.2)',
   fontWeight: 'bold'
+}
+
+const logoutButtonStyle = {
+  cursor: 'pointer',
+  padding: '0.5rem 0.75rem',
+  borderRadius: '4px',
+  backgroundColor: '#ef4444',
+  marginLeft: '1rem',
+  fontWeight: '500',
+  transition: 'all 0.2s ease',
+  display: 'flex',
+  alignItems: 'center'
 }
 
 export default NavBar
