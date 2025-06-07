@@ -5,12 +5,14 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    hmr: {
-      overlay: false
-    }
+    port: 5173,
+    // Avoid conflicts with Unity server
+    strictPort: true,
   },
-  assetsInclude: ['**/*.br'], // Incluir archivos .br como assets
-  build: {
-    assetsInlineLimit: 0 // No inline assets para evitar problemas con Unity
-  }
+  // Configure asset handling for Unity files
+  assetsInclude: ['**/*.br', '**/*.data', '**/*.wasm'],
+  // Ensure proper MIME types for Unity files
+  define: {
+    global: 'globalThis',
+  },
 })
