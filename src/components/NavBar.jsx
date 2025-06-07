@@ -21,7 +21,7 @@ const NavBar = ({ navigateTo, currentPage, onLogout }) => {
             ...(currentPage === 'about' ? activeStyle : {})
           }}
         >
-          Acerca de
+          Videojuego
         </li>
         <li 
           onClick={() => navigateTo('contact')} 

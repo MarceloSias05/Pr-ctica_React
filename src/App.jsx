@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import NavBar from './components/NavBar'
 import HomePage from './components/HomePage'
+import VideoGamePage from './components/VideoGamePage'
 import ContactPage from './components/ContactPage'
 import Login from './components/Login'
 import authService from './services/authService.js'
@@ -77,6 +78,7 @@ function App() {
       />
       <main className="content">
         {currentPage === 'home' && <HomePage />}
+        {currentPage === 'about' && <VideoGamePage />}
         {currentPage === 'contact' && <ContactPage />}
       </main>
     </div>

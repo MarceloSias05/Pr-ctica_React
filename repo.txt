@@ -1,6 +1,10 @@
-password = mauimaui1234
-email = mau@gmail.com
+password = 
+mauimaui1234
+
+email = 
+mau@gmail.com
 
 practica: https://github.com/MarceloSias05/Pr-ctica_React
  
 back: https://github.com/MarceloSias05/API
+
